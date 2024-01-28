@@ -10,7 +10,7 @@ function connect(): PDO
     return $pdo;
 }
 
-function create($table, $fields): bool
+function create(string $table, array $fields): bool
 {
     if (!is_array($fields)) {
         $fields = (array)$fields;
@@ -20,16 +20,36 @@ function create($table, $fields): bool
     $sql .= "(" . implode(',', array_keys($fields)) . ")";
     $sql .= "values(:". implode(',:', array_keys($fields)) .")";
 
-    // dd($sql);
-
     $pdo = connect();
     $insert = $pdo->prepare($sql);
 
     return $insert->execute($fields);
 }
 
+function all(string $table)
+{
+    $pdo = connect();
+
+    $sql = "select * from {$table}";
+    $list = $pdo->query($sql);
+    $list->execute();
+
+    return $list->fetchAll();
+}
+
 function update() {}
 
-function find() {}
+function find(string $table, string $field, string $value)
+{
+    $pdo = connect();
+    $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+    $sql = "select * from {$table} where {$field} = :{$field}";
+
+    $find = $pdo->prepare($sql);
+    $find->bindValue($field, $value);
+    $find->execute();
+
+    return $find->fetch();
+}
 
 function delete() {}
