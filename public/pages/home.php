@@ -41,7 +41,7 @@
                 </td>
                 <td>
                     <a
-                        href="?page=edit_user&id=<?=$user->id;?>"
+                        href="?page=delete_user&id=<?=$user->id;?>"
                         class="btn btn-danger"
                     >
                         Deletar

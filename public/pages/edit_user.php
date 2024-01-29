@@ -8,7 +8,7 @@
     <?= get('message') ?>
 </div>
 
-<form action="/pages/forms/edit_user.php" method="post">
+<form action="/pages/forms/update_user.php" method="post">
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input

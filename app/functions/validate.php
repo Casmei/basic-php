@@ -1,6 +1,6 @@
 <?php
 
-function validate(array $fields)
+function validate(array $fields, string $redirectPage)
 {
     $validatedData = [];
     $errors = [];
@@ -30,7 +30,7 @@ function validate(array $fields)
             flash('message', $error[0]);
         }
 
-        return redirect("contact");
+        return redirect($redirectPage);
     }
 
     return (object) $validatedData;

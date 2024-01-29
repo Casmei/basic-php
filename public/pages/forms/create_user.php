@@ -7,7 +7,7 @@ $data = validate([
     'lastname' => 'required|string',
     'email' => 'required|string|email',
     'password' => 'required|string',
-]);
+], "create_user");
 
 $register = create('users', $data);
 

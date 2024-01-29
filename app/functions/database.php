@@ -6,11 +6,10 @@ function connect(): PDO
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 
-    echo "Conexão bem-sucedida!";
     return $pdo;
 }
 
-function create(string $table, array $fields): bool
+function create(string $table, object $fields): bool
 {
     if (!is_array($fields)) {
         $fields = (array)$fields;
@@ -37,7 +36,29 @@ function all(string $table)
     return $list->fetchAll();
 }
 
-function update() {}
+function update(string $table, object $fields, array $where): int
+{
+    if (!is_array($fields)) {
+        $fields = (array)$fields;
+    }
+
+    $pdo = connect();
+
+    $data = array_map(function ($field) {
+        return "{$field} = :{$field}";
+    }, array_keys($fields));
+
+    $sql = "update {$table} set ";
+    $sql .=  implode(',', $data);
+    $sql .= " where {$where[0]} = :{$where[0]}";
+
+    $data = array_merge($fields, [$where[0] => $where[1]]);
+
+    $update = $pdo->prepare($sql);
+    $update->execute($data);
+
+    return $update->rowCount();
+}
 
 function find(string $table, string $field, string $value)
 {
@@ -52,4 +73,11 @@ function find(string $table, string $field, string $value)
     return $find->fetch();
 }
 
-function delete() {}
+function deleteDb(string $table, string $field, $value)
+{
+    $pdo = connect();
+
+    $sql = "delete from {$table} where {$field} = {$value}";
+    $delete = $pdo->prepare($sql);
+    return $delete->execute();
+}

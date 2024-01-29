@@ -7,7 +7,7 @@ $data = validate([
     'email' => 'required|email',
     'subject' => 'required|string',
     'message' => 'required|string',
-]);
+], "contact");
 
 if (send($data)) {
     flash('message', 'Email enviado com sucesso!', 'success');
